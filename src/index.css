@@ -11,6 +11,9 @@
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
 
+    --white: 0 0% 100%;
+    --white-foreground: 0 0% 60%;
+
     --primary: 355 85% 55%;
     --primary-foreground: 0 0% 100%;
 
@@ -53,6 +56,14 @@
 }
 
 @layer utilities {
+  .text-foreground {
+    color: hsl(var(--white));
+  }
+
+  .hover\:text-foreground:hover {
+    color: hsl(var(--white));
+  }
+
   .text-primary {
     color: hsl(var(--primary));
   }
