@@ -2,6 +2,7 @@ import { useCallback, type JSX } from 'react'
 import Navbar from '@/components/Navbar'
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router'
 import useSearch from '@/contexts/search/useSearch'
+import Button from '@/components/ui/Button'
 
 function AppLayout(): JSX.Element {
   const navigate = useNavigate()
@@ -18,12 +19,14 @@ function AppLayout(): JSX.Element {
 
   const renderBreadcrumb = () => (
     <div className="mb-6 text-sm text-muted-foreground flex flex-wrap gap-1">
-      <button
+      <Button
         className="hover:underline font-medium text-primary"
         onClick={goHome}
+        variant="link"
+        size="text"
       >
         Home
-      </button>
+      </Button>
       {isMediaPage && <span>/ Media Detail</span>}
       {isSearchResultPage && <span>/ Search: "{searchQuery}"</span>}
     </div>
@@ -41,7 +44,7 @@ function AppLayout(): JSX.Element {
       <footer className="border-t border-border mt-16 py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
           <p>
-            © 2025 AutomaFlix. Stream your favorite content anytime, anywhere.
+            © 2025 AutomaFlix. Search your favorite content anytime, anywhere.
           </p>
         </div>
       </footer>
