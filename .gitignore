@@ -13,6 +13,7 @@ dist-ssr
 *.local
 *.production
 *.test
+coverage
 
 # Editor directories and files
 .vscode/*
