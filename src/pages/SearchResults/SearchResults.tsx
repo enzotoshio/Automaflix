@@ -19,6 +19,7 @@ function SearchResults(): JSX.Element {
   const {
     data: { result, totalResults } = { result: [], totalResults: 0 },
     isLoading,
+    isError,
   } = useQuery({
     queryKey: ['search', searchQuery, page, filterType],
     queryFn: async () => {
@@ -47,7 +48,8 @@ function SearchResults(): JSX.Element {
 
   const getTitle = () => {
     if (searchQuery) return `Search results for "${searchQuery}"`
-    return 'All Content'
+    if (isError) return `Error occurred while searching for "${searchQuery}"`
+    return 'Please search something to see results'
   }
 
   const visiblePages = useMemo(() => {
@@ -76,6 +78,7 @@ function SearchResults(): JSX.Element {
             key={type ?? 'all'}
             variant={filterType === type ? 'default' : 'outline'}
             size="sm"
+            data-testid={`filter-${type ?? 'all'}`}
             onClick={() => setFilterType(type)}
           >
             {type ? type.charAt(0).toUpperCase() + type.slice(1) : 'All'}
@@ -83,7 +86,12 @@ function SearchResults(): JSX.Element {
         ))}
       </div>
 
-      <h1 className="text-4xl font-bold text-foreground mb-8">{getTitle()}</h1>
+      <h1
+        className="text-4xl font-bold text-foreground mb-8"
+        data-testid="search-title"
+      >
+        {getTitle()}
+      </h1>
 
       {isLoading ? (
         <div className="text-center py-16 text-muted-foreground">
@@ -121,6 +129,7 @@ function SearchResults(): JSX.Element {
                 onClick={() => setPage(p)}
                 variant={p === page ? 'default' : 'outline'}
                 size="sm"
+                data-testid={`page-button-${p}`}
               >
                 {p}
               </Button>
