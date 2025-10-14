@@ -3,11 +3,11 @@ import ContentRow from '@/components/ContentRow'
 import type { JSX } from 'react'
 import {
   DescriptionSize,
-  fetchMovie,
+  fetchMedia,
   MediaType,
-  searchMovies,
+  searchMedias,
   type OMDbFetchAPIResult,
-} from '@/api/movies'
+} from '@/api/media'
 import { useQuery } from '@tanstack/react-query'
 import { mediaDetailRoute } from '@/routes'
 import { useParams } from '@tanstack/react-router'
@@ -17,20 +17,19 @@ function MediaDetail(): JSX.Element {
   const { data: media, isFetching } = useQuery({
     queryKey: ['movie', mediaId],
     queryFn: async () =>
-      fetchMovie({ mediaId, descriptionSize: DescriptionSize.Full }),
+      fetchMedia({ mediaId, descriptionSize: DescriptionSize.Full }),
     retry: 2,
     staleTime: 1000 * 60 * 60 * 24,
   })
 
   const { data: relatedContent = [], isFetching: isFetchingRelatedContent } =
     useQuery({
-      queryKey: ['movies', 'featured', new Date().getDate()],
+      queryKey: ['movies', 'featured', media?.Title],
       queryFn: async () => {
         const movies =
           (
-            await searchMovies({
+            await searchMedias({
               title: media?.Title || 'movie',
-              type: media?.Type || MediaType.Movie,
               page: 1,
             })
           ).Search || []
@@ -38,7 +37,7 @@ function MediaDetail(): JSX.Element {
         return movies.slice(0, 6).filter((m) => m.imdbID !== mediaId)
       },
       retry: 3,
-      staleTime: 1000 * 60 * 60 * 24,
+      staleTime: 1000 * 60 * 60,
       enabled: !!media?.Title,
     })
 

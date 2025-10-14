@@ -1,6 +1,6 @@
 import ContentCard from '@/components/ContentCard'
 import { useCallback, useState, type JSX, useMemo } from 'react'
-import { MediaType, searchMovies } from '@/api/movies'
+import { MediaType, searchMedias } from '@/api/media'
 import { useQuery } from '@tanstack/react-query'
 import useSearch from '@/contexts/search/useSearch'
 import Button from '@/components/ui/Button'
@@ -24,7 +24,7 @@ function SearchResults(): JSX.Element {
     queryKey: ['search', searchQuery, page, filterType],
     queryFn: async () => {
       if (!searchQuery) return { result: [], totalResults: 0 }
-      const { Search: result = [], totalResults = 0 } = await searchMovies({
+      const { Search: result = [], totalResults = 0 } = await searchMedias({
         title: searchQuery,
         type: filterType,
         page,

@@ -3,8 +3,8 @@ import { screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/test/test-utils'
 import ContentCard from './ContentCard'
-import type { OMDbFetchAPIResult, OMDbSearchAPIResult } from '@/api/movies'
-import { MediaType } from '@/api/movies'
+import type { OMDbFetchAPIResult, OMDbSearchAPIResult } from '@/api/media'
+import { MediaType } from '@/api/media'
 
 const mockNavigate = vi.fn()
 vi.mock('@tanstack/react-router', () => ({

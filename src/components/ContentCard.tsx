@@ -1,4 +1,4 @@
-import type { OMDbFetchAPIResult, OMDbSearchAPIResult } from '@/api/movies'
+import type { OMDbFetchAPIResult, OMDbSearchAPIResult } from '@/api/media'
 import { useNavigate } from '@tanstack/react-router'
 import { useCallback, useState } from 'react'
 

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '@/test/test-utils'
 import Home from './Home'
-import * as moviesApi from '@/api/movies'
+import * as moviesApi from '@/api/media'
 
 vi.mock('@/components/ContentRow', () => ({
   default: ({
@@ -29,7 +29,7 @@ vi.mock('@/components/ContentRow', () => ({
   ),
 }))
 
-const mockFetchMovie = vi.spyOn(moviesApi, 'fetchMovie')
+const mockfetchMedia = vi.spyOn(moviesApi, 'fetchMedia')
 
 describe('Home Page', () => {
   const mockMovieData = {
@@ -60,13 +60,13 @@ describe('Home Page', () => {
   }
 
   beforeEach(() => {
-    mockFetchMovie.mockClear()
+    mockfetchMedia.mockClear()
   })
 
   describe('Rendering', () => {
     it('should render all three content rows', () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -85,7 +85,7 @@ describe('Home Page', () => {
 
     it('should display correct row titles', () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -100,27 +100,27 @@ describe('Home Page', () => {
   describe('Data Fetching', () => {
     it('should fetch all featured content on mount', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders(<Home />)
 
       // Verify
       await waitFor(() => {
-        expect(mockFetchMovie).toHaveBeenCalledTimes(18) // 6 movies + 6 series + 6 episodes
+        expect(mockfetchMedia).toHaveBeenCalledTimes(18) // 6 movies + 6 series + 6 episodes
       })
     })
 
     it('should fetch movies with correct parameters', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders(<Home />)
 
       // Verify
       await waitFor(() => {
-        expect(mockFetchMovie).toHaveBeenCalledWith({
+        expect(mockfetchMedia).toHaveBeenCalledWith({
           mediaId: 'tt0372784',
           type: moviesApi.MediaType.Movie,
           descriptionSize: moviesApi.DescriptionSize.Short,
@@ -130,14 +130,14 @@ describe('Home Page', () => {
 
     it('should fetch series with correct parameters', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockSeriesData)
+      mockfetchMedia.mockResolvedValue(mockSeriesData)
 
       // Exercise
       renderWithProviders(<Home />)
 
       // Verify
       await waitFor(() => {
-        expect(mockFetchMovie).toHaveBeenCalledWith({
+        expect(mockfetchMedia).toHaveBeenCalledWith({
           mediaId: 'tt0944947',
           type: moviesApi.MediaType.Series,
           descriptionSize: moviesApi.DescriptionSize.Short,
@@ -147,14 +147,14 @@ describe('Home Page', () => {
 
     it('should fetch episodes with correct parameters', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockEpisodeData)
+      mockfetchMedia.mockResolvedValue(mockEpisodeData)
 
       // Exercise
       renderWithProviders(<Home />)
 
       // Verify
       await waitFor(() => {
-        expect(mockFetchMovie).toHaveBeenCalledWith({
+        expect(mockfetchMedia).toHaveBeenCalledWith({
           mediaId: 'tt1541289',
           type: moviesApi.MediaType.Episode,
           descriptionSize: moviesApi.DescriptionSize.Short,
@@ -166,7 +166,7 @@ describe('Home Page', () => {
   describe('Loading States', () => {
     it('should show loading state initially', () => {
       // Setup
-      mockFetchMovie.mockImplementation(() => new Promise(() => {}))
+      mockfetchMedia.mockImplementation(() => new Promise(() => {}))
 
       // Exercise
       renderWithProviders(<Home />)
@@ -180,7 +180,7 @@ describe('Home Page', () => {
 
     it('should show loaded state after data is fetched', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -196,7 +196,7 @@ describe('Home Page', () => {
 
     it('should handle different loading states independently', async () => {
       // Setup
-      mockFetchMovie.mockImplementation((params) => {
+      mockfetchMedia.mockImplementation((params) => {
         if (params.type === moviesApi.MediaType.Movie) {
           return Promise.resolve(mockMovieData)
         }
@@ -228,7 +228,7 @@ describe('Home Page', () => {
     it('should display fetched movies', async () => {
       // Setup
       const movieData = { ...mockMovieData, Title: 'Batman Begins' }
-      mockFetchMovie.mockResolvedValue(movieData)
+      mockfetchMedia.mockResolvedValue(movieData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -245,7 +245,7 @@ describe('Home Page', () => {
     it('should display fetched series', async () => {
       // Setup
       const seriesData = { ...mockSeriesData, Title: 'Game of Thrones' }
-      mockFetchMovie.mockResolvedValue(seriesData)
+      mockfetchMedia.mockResolvedValue(seriesData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -262,7 +262,7 @@ describe('Home Page', () => {
     it('should display fetched episodes', async () => {
       // Setup
       const episodeData = { ...mockEpisodeData, Title: 'The Playbook' }
-      mockFetchMovie.mockResolvedValue(episodeData)
+      mockfetchMedia.mockResolvedValue(episodeData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -280,7 +280,7 @@ describe('Home Page', () => {
   describe('Error Handling', () => {
     it('should handle fetch errors gracefully', async () => {
       // Setup
-      mockFetchMovie.mockRejectedValue(new Error('API Error'))
+      mockfetchMedia.mockRejectedValue(new Error('API Error'))
 
       // Exercise
       renderWithProviders(<Home />)
@@ -296,7 +296,7 @@ describe('Home Page', () => {
 
     it('should retry failed requests', async () => {
       // Setup
-      mockFetchMovie
+      mockfetchMedia
         .mockRejectedValueOnce(new Error('Network Error'))
         .mockRejectedValueOnce(new Error('Network Error'))
         .mockResolvedValue(mockMovieData)
@@ -309,7 +309,7 @@ describe('Home Page', () => {
         () => {
           // Each category makes 6 calls, with 3 retries each = 18 calls per category
           // But some might succeed on retry, so let's check for at least 18 total calls
-          expect(mockFetchMovie).toHaveBeenCalledTimes(18)
+          expect(mockfetchMedia).toHaveBeenCalledTimes(18)
         },
         { timeout: 10000 },
       )
@@ -317,7 +317,7 @@ describe('Home Page', () => {
 
     it('should handle partial failures across different content types', async () => {
       // Setup
-      mockFetchMovie.mockImplementation((params) => {
+      mockfetchMedia.mockImplementation((params) => {
         if (params.type === moviesApi.MediaType.Movie) {
           return Promise.resolve(mockMovieData)
         }
@@ -378,7 +378,7 @@ describe('Home Page', () => {
         'tt0133093',
         'tt0137523',
       ]
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -386,7 +386,7 @@ describe('Home Page', () => {
       // Verify
       await waitFor(() => {
         expectedMovieIds.forEach((id) => {
-          expect(mockFetchMovie).toHaveBeenCalledWith({
+          expect(mockfetchMedia).toHaveBeenCalledWith({
             mediaId: id,
             type: moviesApi.MediaType.Movie,
             descriptionSize: moviesApi.DescriptionSize.Short,
@@ -405,7 +405,7 @@ describe('Home Page', () => {
         'tt0903747',
         'tt1475582',
       ]
-      mockFetchMovie.mockResolvedValue(mockSeriesData)
+      mockfetchMedia.mockResolvedValue(mockSeriesData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -413,7 +413,7 @@ describe('Home Page', () => {
       // Verify
       await waitFor(() => {
         expectedSeriesIds.forEach((id) => {
-          expect(mockFetchMovie).toHaveBeenCalledWith({
+          expect(mockfetchMedia).toHaveBeenCalledWith({
             mediaId: id,
             type: moviesApi.MediaType.Series,
             descriptionSize: moviesApi.DescriptionSize.Short,
@@ -432,7 +432,7 @@ describe('Home Page', () => {
         'tt2178784',
         'tt2301455',
       ]
-      mockFetchMovie.mockResolvedValue(mockEpisodeData)
+      mockfetchMedia.mockResolvedValue(mockEpisodeData)
 
       // Exercise
       renderWithProviders(<Home />)
@@ -440,7 +440,7 @@ describe('Home Page', () => {
       // Verify
       await waitFor(() => {
         expectedEpisodeIds.forEach((id) => {
-          expect(mockFetchMovie).toHaveBeenCalledWith({
+          expect(mockfetchMedia).toHaveBeenCalledWith({
             mediaId: id,
             type: moviesApi.MediaType.Episode,
             descriptionSize: moviesApi.DescriptionSize.Short,

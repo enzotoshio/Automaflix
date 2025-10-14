@@ -3,7 +3,7 @@ import { screen, waitFor, render } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
 import MediaDetail from './MediaDetail'
-import * as moviesApi from '@/api/movies'
+import * as moviesApi from '@/api/media'
 
 vi.mock('@tanstack/react-router', () => ({
   useParams: vi.fn(),
@@ -40,8 +40,8 @@ vi.mock('@/components/ContentRow', () => ({
   ),
 }))
 
-const mockFetchMovie = vi.spyOn(moviesApi, 'fetchMovie')
-const mockSearchMovies = vi.spyOn(moviesApi, 'searchMovies')
+const mockfetchMedia = vi.spyOn(moviesApi, 'fetchMedia')
+const mocksearchMedias = vi.spyOn(moviesApi, 'searchMedias')
 const mockUseParams = vi.mocked(useParams)
 
 const renderWithProviders = (mediaId = 'tt0372784') => {
@@ -117,15 +117,15 @@ describe('MediaDetail Page', () => {
   }
 
   beforeEach(() => {
-    mockFetchMovie.mockClear()
-    mockSearchMovies.mockClear()
+    mockfetchMedia.mockClear()
+    mocksearchMedias.mockClear()
     mockUseParams.mockClear()
   })
 
   describe('Loading States', () => {
     it('should show loading state while fetching movie data', () => {
       // Setup
-      mockFetchMovie.mockImplementation(() => new Promise(() => {}))
+      mockfetchMedia.mockImplementation(() => new Promise(() => {}))
 
       // Exercise
       renderWithProviders()
@@ -136,8 +136,8 @@ describe('MediaDetail Page', () => {
 
     it('should show loading state for related content', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockImplementation(() => new Promise(() => {}))
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockImplementation(() => new Promise(() => {}))
 
       // Exercise
       renderWithProviders()
@@ -156,8 +156,8 @@ describe('MediaDetail Page', () => {
   describe('Movie Content Display', () => {
     it('should display movie title and basic information', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -173,8 +173,8 @@ describe('MediaDetail Page', () => {
 
     it('should display movie genres as tags', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -189,8 +189,8 @@ describe('MediaDetail Page', () => {
 
     it('should display director and writer information', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -210,8 +210,8 @@ describe('MediaDetail Page', () => {
 
     it('should display movie plot in about section', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -227,8 +227,8 @@ describe('MediaDetail Page', () => {
 
     it('should display media type badge', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -243,8 +243,8 @@ describe('MediaDetail Page', () => {
   describe('Related Content', () => {
     it('should display related content when available', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -259,8 +259,8 @@ describe('MediaDetail Page', () => {
 
     it('should filter out current movie from related content', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders('tt0372784')
@@ -277,8 +277,8 @@ describe('MediaDetail Page', () => {
     it('should show appropriate title for different media types', async () => {
       // Setup
       const seriesData = { ...mockMovieData, Type: moviesApi.MediaType.Series }
-      mockFetchMovie.mockResolvedValue(seriesData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(seriesData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -291,8 +291,8 @@ describe('MediaDetail Page', () => {
 
     it('should not display related content section when no content available', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue({
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue({
         Search: [],
         totalResults: '0',
         Response: 'True' as const,
@@ -313,7 +313,7 @@ describe('MediaDetail Page', () => {
   describe('Error Handling', () => {
     it('should show not found message when movie is not found', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue({
+      mockfetchMedia.mockResolvedValue({
         imdbID: 'invalid-id',
         Response: 'False',
         Error: 'Movie not found!',
@@ -330,7 +330,7 @@ describe('MediaDetail Page', () => {
 
     it('should handle API errors gracefully', async () => {
       // Setup
-      mockFetchMovie.mockRejectedValue(new Error('API Error'))
+      mockfetchMedia.mockRejectedValue(new Error('API Error'))
 
       // Exercise
       renderWithProviders()
@@ -343,8 +343,8 @@ describe('MediaDetail Page', () => {
 
     it('should handle related content fetch errors', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockRejectedValue(new Error('Related content error'))
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockRejectedValue(new Error('Related content error'))
 
       // Exercise
       renderWithProviders()
@@ -361,15 +361,15 @@ describe('MediaDetail Page', () => {
   describe('API Calls', () => {
     it('should fetch movie details with correct parameters', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders('tt0372784')
 
       // Verify
       await waitFor(() => {
-        expect(mockFetchMovie).toHaveBeenCalledWith({
+        expect(mockfetchMedia).toHaveBeenCalledWith({
           mediaId: 'tt0372784',
           descriptionSize: moviesApi.DescriptionSize.Full,
         })
@@ -378,17 +378,16 @@ describe('MediaDetail Page', () => {
 
     it('should fetch related content after movie data loads', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
 
       // Verify
       await waitFor(() => {
-        expect(mockSearchMovies).toHaveBeenCalledWith({
+        expect(mocksearchMedias).toHaveBeenCalledWith({
           title: 'Batman Begins',
-          type: moviesApi.MediaType.Movie,
           page: 1,
         })
       })
@@ -396,13 +395,13 @@ describe('MediaDetail Page', () => {
 
     it('should not fetch related content when movie data is not available', () => {
       // Setup
-      mockFetchMovie.mockImplementation(() => new Promise(() => {}))
+      mockfetchMedia.mockImplementation(() => new Promise(() => {}))
 
       // Exercise
       renderWithProviders()
 
       // Verify
-      expect(mockSearchMovies).not.toHaveBeenCalled()
+      expect(mocksearchMedias).not.toHaveBeenCalled()
     })
   })
 
@@ -414,8 +413,8 @@ describe('MediaDetail Page', () => {
         Director: undefined,
         Writer: undefined,
       }
-      mockFetchMovie.mockResolvedValue(movieWithoutCredits)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(movieWithoutCredits)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -435,8 +434,8 @@ describe('MediaDetail Page', () => {
         ...mockMovieData,
         Genre: undefined,
       }
-      mockFetchMovie.mockResolvedValue(movieWithoutGenre)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(movieWithoutGenre)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -451,8 +450,8 @@ describe('MediaDetail Page', () => {
 
     it('should render poster image in hero section', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithProviders()
@@ -472,14 +471,14 @@ describe('MediaDetail Page', () => {
   describe('Query Key Management', () => {
     it('should use correct query key for movie data', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders('tt0372784')
 
       // Verify
       await waitFor(() => {
-        expect(mockFetchMovie).toHaveBeenCalledWith({
+        expect(mockfetchMedia).toHaveBeenCalledWith({
           mediaId: 'tt0372784',
           descriptionSize: moviesApi.DescriptionSize.Full,
         })
@@ -488,13 +487,13 @@ describe('MediaDetail Page', () => {
 
     it('should refetch when media ID changes', async () => {
       // Setup
-      mockFetchMovie.mockResolvedValue(mockMovieData)
+      mockfetchMedia.mockResolvedValue(mockMovieData)
 
       // Exercise
       renderWithProviders('tt0372784')
 
       await waitFor(() => {
-        expect(mockFetchMovie).toHaveBeenCalledWith({
+        expect(mockfetchMedia).toHaveBeenCalledWith({
           mediaId: 'tt0372784',
           descriptionSize: moviesApi.DescriptionSize.Full,
         })
@@ -503,7 +502,7 @@ describe('MediaDetail Page', () => {
       // Teardown
       // Note: This test verifies that the query key includes mediaId
       // Re-rendering with a different mediaId would require a new QueryClient
-      expect(mockFetchMovie).toHaveBeenCalledTimes(1)
+      expect(mockfetchMedia).toHaveBeenCalledTimes(1)
     })
   })
 })

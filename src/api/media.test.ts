@@ -7,7 +7,7 @@ import {
   mockFetchErrorResponse,
   mockSearchErrorResponse,
 } from '../test/setup'
-import { fetchMovie, searchMovies, MediaType, DescriptionSize } from './movies'
+import { fetchMedia, searchMedias, MediaType, DescriptionSize } from './media'
 
 const API_URL = '/api'
 
@@ -16,7 +16,7 @@ describe('API Movies', () => {
     server.resetHandlers()
   })
 
-  describe('fetchMovie', () => {
+  describe('fetchMedia', () => {
     it('should handle request success', async () => {
       // Setup
       server.use(
@@ -32,7 +32,7 @@ describe('API Movies', () => {
       )
 
       // Exercise
-      const result = await fetchMovie({
+      const result = await fetchMedia({
         mediaId: 'tt0468569',
         descriptionSize: DescriptionSize.Short,
       })
@@ -46,7 +46,7 @@ describe('API Movies', () => {
     it('should throw error when neither mediaId nor title provided', async () => {
       // Exercise & Verify
       await expect(
-        fetchMovie({
+        fetchMedia({
           descriptionSize: DescriptionSize.Short,
         }),
       ).rejects.toThrow('Either mediaId or title must be provided')
@@ -62,7 +62,7 @@ describe('API Movies', () => {
 
       // Exercise & Verify
       await expect(
-        fetchMovie({
+        fetchMedia({
           mediaId: 'tt0468569',
           descriptionSize: DescriptionSize.Short,
         }),
@@ -78,7 +78,7 @@ describe('API Movies', () => {
       )
 
       // Exercise
-      const result = await fetchMovie({
+      const result = await fetchMedia({
         mediaId: 'invalid-id',
         descriptionSize: DescriptionSize.Short,
       })
@@ -101,7 +101,7 @@ describe('API Movies', () => {
       )
 
       // Exercise
-      await fetchMovie({
+      await fetchMedia({
         title: 'The Dark Knight',
         year: '2008',
         type: MediaType.Movie,
@@ -131,7 +131,7 @@ describe('API Movies', () => {
       )
 
       // Exercise
-      await fetchMovie({
+      await fetchMedia({
         title: 'Spider-Man: No Way Home',
         descriptionSize: DescriptionSize.Short,
       })
@@ -142,7 +142,7 @@ describe('API Movies', () => {
     })
   })
 
-  describe('searchMovies', () => {
+  describe('searchMedias', () => {
     it('should handle request success', async () => {
       // Setup
       server.use(
@@ -158,7 +158,7 @@ describe('API Movies', () => {
       )
 
       // Exercise
-      const result = await searchMovies({
+      const result = await searchMedias({
         title: 'Batman',
       })
 
@@ -178,7 +178,7 @@ describe('API Movies', () => {
 
       // Exercise & Verify
       await expect(
-        searchMovies({
+        searchMedias({
           title: 'Batman',
         }),
       ).rejects.toThrow('API Error')
@@ -193,7 +193,7 @@ describe('API Movies', () => {
       )
 
       // Exercise
-      const result = await searchMovies({
+      const result = await searchMedias({
         title: 'Batman',
       })
 
@@ -215,7 +215,7 @@ describe('API Movies', () => {
       )
 
       // Exercise
-      await searchMovies({
+      await searchMedias({
         title: 'Batman',
         year: '2008',
         type: MediaType.Movie,

@@ -3,8 +3,8 @@ import { screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/test/test-utils'
 import ContentRow from './ContentRow'
-import type { OMDbFetchAPIResult } from '@/api/movies'
-import { MediaType } from '@/api/movies'
+import type { OMDbFetchAPIResult } from '@/api/media'
+import { MediaType } from '@/api/media'
 
 vi.mock('./ContentCard', () => ({
   default: ({

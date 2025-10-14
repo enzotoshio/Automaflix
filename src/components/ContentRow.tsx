@@ -1,6 +1,6 @@
 import ContentCard from '@/components/ContentCard'
 import { useEffect, useRef, useState } from 'react'
-import type { OMDbFetchAPIResult, OMDbSearchAPIResult } from '@/api/movies'
+import type { OMDbFetchAPIResult, OMDbSearchAPIResult } from '@/api/media'
 import Button from './ui/Button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 

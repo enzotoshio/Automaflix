@@ -2,10 +2,10 @@ import { type JSX } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
   DescriptionSize,
-  fetchMovie,
+  fetchMedia,
   MediaType,
   type OMDbFetchAPIResult,
-} from '../../api/movies'
+} from '@/api/media'
 import ContentRow from '@/components/ContentRow'
 
 function Home(): JSX.Element {
@@ -42,7 +42,7 @@ function Home(): JSX.Element {
       queryFn: async () =>
         Promise.all(
           FEATURED_MOVIES_IDS.map((id) =>
-            fetchMovie({
+            fetchMedia({
               mediaId: id,
               type: MediaType.Movie,
               descriptionSize: DescriptionSize.Short,
@@ -59,7 +59,7 @@ function Home(): JSX.Element {
       queryFn: async () =>
         Promise.all(
           FEATURED_SERIES_IDS.map((id) =>
-            fetchMovie({
+            fetchMedia({
               mediaId: id,
               type: MediaType.Series,
               descriptionSize: DescriptionSize.Short,
@@ -78,7 +78,7 @@ function Home(): JSX.Element {
     queryFn: async () =>
       Promise.all(
         FEATURED_EPISODES_IDS.map((id) =>
-          fetchMovie({
+          fetchMedia({
             mediaId: id,
             type: MediaType.Episode,
             descriptionSize: DescriptionSize.Short,

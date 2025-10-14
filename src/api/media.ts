@@ -77,7 +77,7 @@ export type SearchOMDbAPIResponse = {
 const MOVIE_API_URL = import.meta.env.VITE_MOVIE_API_URL
 const MOVIE_API_TOKEN = import.meta.env.VITE_MOVIE_API_KEY
 
-async function fetchMovie({
+async function fetchMedia({
   title,
   year,
   type,
@@ -112,7 +112,7 @@ async function fetchMovie({
   return response.json() as Promise<OMDbFetchAPIResult>
 }
 
-async function searchMovies({
+async function searchMedias({
   title,
   year,
   type,
@@ -138,4 +138,4 @@ async function searchMovies({
   return response.json()
 }
 
-export { fetchMovie, searchMovies }
+export { fetchMedia, searchMedias }

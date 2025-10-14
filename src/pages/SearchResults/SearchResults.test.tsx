@@ -3,7 +3,7 @@ import { screen, waitFor, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import SearchResults from './SearchResults'
-import * as moviesApi from '@/api/movies'
+import * as moviesApi from '@/api/media'
 import SearchContext from '@/contexts/search/context'
 
 vi.mock('@/components/ContentCard', () => ({
@@ -37,7 +37,7 @@ vi.mock('@/components/ui/Button', () => ({
   ),
 }))
 
-const mockSearchMovies = vi.spyOn(moviesApi, 'searchMovies')
+const mocksearchMedias = vi.spyOn(moviesApi, 'searchMedias')
 
 const renderWithSearchQuery = (searchQuery = '') => {
   const queryClient = new QueryClient({
@@ -86,7 +86,7 @@ describe('SearchResults Page', () => {
   }
 
   beforeEach(() => {
-    mockSearchMovies.mockClear()
+    mocksearchMedias.mockClear()
   })
 
   describe('Rendering', () => {
@@ -125,14 +125,14 @@ describe('SearchResults Page', () => {
   describe('Search Functionality', () => {
     it('should search movies when search query is provided', async () => {
       // Setup
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
 
       // Verify
       await waitFor(() => {
-        expect(mockSearchMovies).toHaveBeenCalledWith({
+        expect(mocksearchMedias).toHaveBeenCalledWith({
           title: 'Batman',
           type: undefined,
           page: 1,
@@ -142,18 +142,18 @@ describe('SearchResults Page', () => {
 
     it('should not search when search query is empty', () => {
       // Setup
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithSearchQuery()
 
       // Verify
-      expect(mockSearchMovies).not.toHaveBeenCalled()
+      expect(mocksearchMedias).not.toHaveBeenCalled()
     })
 
     it('should display search results', async () => {
       // Setup
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -169,7 +169,7 @@ describe('SearchResults Page', () => {
 
     it('should show loading state during search', () => {
       // Setup
-      mockSearchMovies.mockImplementation(() => new Promise(() => {}))
+      mocksearchMedias.mockImplementation(() => new Promise(() => {}))
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -180,7 +180,7 @@ describe('SearchResults Page', () => {
 
     it('should show no results message when no results found', async () => {
       // Setup
-      mockSearchMovies.mockResolvedValue(mockEmptyResults)
+      mocksearchMedias.mockResolvedValue(mockEmptyResults)
 
       // Exercise
       renderWithSearchQuery('NonexistentMovie')
@@ -198,7 +198,7 @@ describe('SearchResults Page', () => {
     it(`should filter by ${moviesApi.MediaType.Movie} type`, async () => {
       // Setup
       const user = userEvent.setup()
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -209,7 +209,7 @@ describe('SearchResults Page', () => {
 
       // Verify
       await waitFor(() => {
-        expect(mockSearchMovies).toHaveBeenCalledWith({
+        expect(mocksearchMedias).toHaveBeenCalledWith({
           title: 'Batman',
           type: moviesApi.MediaType.Movie,
           page: 1,
@@ -220,7 +220,7 @@ describe('SearchResults Page', () => {
     it(`should filter by ${moviesApi.MediaType.Series} type`, async () => {
       // Setup
       const user = userEvent.setup()
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -231,7 +231,7 @@ describe('SearchResults Page', () => {
 
       // Verify
       await waitFor(() => {
-        expect(mockSearchMovies).toHaveBeenCalledWith({
+        expect(mocksearchMedias).toHaveBeenCalledWith({
           title: 'Batman',
           type: moviesApi.MediaType.Series,
           page: 1,
@@ -242,7 +242,7 @@ describe('SearchResults Page', () => {
     it(`should filter by ${moviesApi.MediaType.Movie} type`, async () => {
       // Setup
       const user = userEvent.setup()
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -253,7 +253,7 @@ describe('SearchResults Page', () => {
 
       // Verify
       await waitFor(() => {
-        expect(mockSearchMovies).toHaveBeenCalledWith({
+        expect(mocksearchMedias).toHaveBeenCalledWith({
           title: 'Batman',
           type: moviesApi.MediaType.Episode,
           page: 1,
@@ -264,7 +264,7 @@ describe('SearchResults Page', () => {
     it('should highlight active filter', async () => {
       // Setup
       const user = userEvent.setup()
-      mockSearchMovies.mockResolvedValue(mockSearchResults)
+      mocksearchMedias.mockResolvedValue(mockSearchResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -290,7 +290,7 @@ describe('SearchResults Page', () => {
 
     it('should show pagination controls when results exceed 10', async () => {
       // Setup
-      mockSearchMovies.mockResolvedValue(mockManyResults)
+      mocksearchMedias.mockResolvedValue(mockManyResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -307,7 +307,7 @@ describe('SearchResults Page', () => {
     it('should navigate to next page', async () => {
       // Setup
       const user = userEvent.setup()
-      mockSearchMovies.mockResolvedValue(mockManyResults)
+      mocksearchMedias.mockResolvedValue(mockManyResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -320,7 +320,7 @@ describe('SearchResults Page', () => {
 
       // Verify
       await waitFor(() => {
-        expect(mockSearchMovies).toHaveBeenLastCalledWith({
+        expect(mocksearchMedias).toHaveBeenLastCalledWith({
           title: 'Batman',
           type: undefined,
           page: 2,
@@ -330,7 +330,7 @@ describe('SearchResults Page', () => {
 
     it('should disable previous button on first page', async () => {
       // Setup
-      mockSearchMovies.mockResolvedValue(mockManyResults)
+      mocksearchMedias.mockResolvedValue(mockManyResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -345,7 +345,7 @@ describe('SearchResults Page', () => {
     it('should navigate to specific page', async () => {
       // Setup
       const user = userEvent.setup()
-      mockSearchMovies.mockResolvedValue(mockManyResults)
+      mocksearchMedias.mockResolvedValue(mockManyResults)
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -358,7 +358,7 @@ describe('SearchResults Page', () => {
 
       // Verify
       await waitFor(() => {
-        expect(mockSearchMovies).toHaveBeenLastCalledWith({
+        expect(mocksearchMedias).toHaveBeenLastCalledWith({
           title: 'Batman',
           type: undefined,
           page: 3,
@@ -370,7 +370,7 @@ describe('SearchResults Page', () => {
   describe('Error Handling', () => {
     it('should handle API errors gracefully', async () => {
       // Setup
-      mockSearchMovies.mockRejectedValue(new Error('API Error'))
+      mocksearchMedias.mockRejectedValue(new Error('API Error'))
 
       // Exercise
       renderWithSearchQuery('Batman')
@@ -389,7 +389,7 @@ describe('SearchResults Page', () => {
 
     it('should retry failed requests', async () => {
       // Setup
-      mockSearchMovies
+      mocksearchMedias
         .mockRejectedValueOnce(new Error('Network Error'))
         .mockRejectedValueOnce(new Error('Network Error'))
         .mockResolvedValue(mockSearchResults)
@@ -400,7 +400,7 @@ describe('SearchResults Page', () => {
       // Verify
       await waitFor(
         () => {
-          expect(mockSearchMovies).toHaveBeenCalledTimes(3)
+          expect(mocksearchMedias).toHaveBeenCalledTimes(3)
         },
         { timeout: 5000 },
       )
@@ -410,7 +410,7 @@ describe('SearchResults Page', () => {
   describe('Visible Pages Calculation', () => {
     it('should show all pages when total pages is 7 or less', async () => {
       // Setup
-      mockSearchMovies.mockResolvedValue({
+      mocksearchMedias.mockResolvedValue({
         ...mockSearchResults,
         totalResults: '70',
       })
@@ -429,7 +429,7 @@ describe('SearchResults Page', () => {
     it('should show 3 pages ahead and 3 behind when after the middle', async () => {
       // Setup
       const user = userEvent.setup()
-      mockSearchMovies.mockResolvedValue({
+      mocksearchMedias.mockResolvedValue({
         ...mockSearchResults,
         totalResults: '200',
       })
